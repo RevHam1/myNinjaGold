@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <link rel="icon" href="{% static 'favicon.ico' %}" />
+    <title>Ninja Gold</title>
+    {{ request.session.used_buildings|json_script:"used-buildings-data" }}
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  </head>
+  <body>
+    <div id="container">
+      <h3 class="my-total">
+        My Ninja Gold Total is {{ request.session.gold }}
+      </h3>
+      {% if request.session.all_lost_conditions_met %}
+      <p class="loose">
+        You've been at the "Casino" too long. You "LOST" Take a break or Reset
+        Gold.
+      </p>
+      {% elif request.session.win_condition_met %}
+      <p class="win">
+        Congratulations! You've reached the maximum Casino visits and secured a
+        "BIG WIN!"
+      </p>
+      {% endif %}
+      <div class="flex-div">
+        <div style="text-align: center">
+          <img
+            id="gold-ninja"
+            src="{% static 'images/gold_ninja.jpg' %}"
+            alt="Gold Ninja"
+          />
+        </div>
+        <a href="/reset">Reset Gold</a>
+        <p class="note">
+          Find Gold in each area below and see your Gold grow. But be careful at
+          the Casino...
+        </p>
+      </div>
+      <div class="location-container">
+        <!-- Farm -->
+        <div class="location">
+          <h2>Farm</h2>
+          <p>Earns 50-100 ounces of gold</p>
+          <form action="/process_money" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="building" value="farm" />
+            <input class="gold" type="submit" value="Find Gold!" />
+          </form>
+          {% if "farm" in request.session.used_buildings %}
+          <p style="color: red">You've Searched on a Farm.</p>
+          {% endif %}
+        </div>
+        <!-- Cave -->
+        <div class="location">
+          <h2>Cave</h2>
+          <p>Earns 100-250 ounces of gold</p>
+          <form action="/process_money" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="building" value="cave" />
+            <input class="gold" type="submit" value="Find Gold!" />
+          </form>
+          {% if "cave" in request.session.used_buildings %}
+          <p style="color: red">You Discovered in a Cave.</p>
+          {% endif %}
+        </div>
+        <!-- House -->
+        <div class="location">
+          <h2>House</h2>
+          <p>Earns 20-50 ounces of gold</p>
+          <form action="/process_money" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="building" value="house" />
+            <input class="gold" type="submit" value="Find Gold!" />
+          </form>
+          {% if "house" in request.session.used_buildings %}
+          <p style="color: red">You Stolen from a House.</p>
+          {% endif %}
+        </div>
+        <!-- Casino -->
+        <div class="location">
+          <h2>Casino</h2>
+          {% if request.session.gold < 1 %}
+          <p style="color: red; font-size: medium; text-align: center">
+            No Gold! No Casino!
+          </p>
+          <form action="/process_money" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="building" value="casino" />
+            <input class="gold" type="submit" value="Need Gold!" />
+          </form>
+          {% else %}
+          <p>Earn/lose 0-50 Gold ounces</p>
+          <form action="/process_money" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="building" value="casino" />
+            <input class="gold" type="submit" value="Play UNTIL" />
+          </form>
+          {% endif %}
+        </div>
+      </div>
+      <h4>Activities</h4>
+
+      <div class="activity">
+        {%for activity in request.session.activites%} {%if "Yay" in activity%}
+        <p class="green">{{activity}}</p>
+        {% else %}
+        <p class="red">{{activity}}</p>
+        {% endif %} {% endfor %}
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const winSound = new Audio("/static/sounds/applause4.mp3");
+        const loseSound = new Audio("/static/sounds/boo.wav");
+        const ninjaSound = new Audio("{% static 'sounds/ninjagold.wav' %}");
+        const soundToPlay =
+          "{{ request.session.sound_to_play|default:''|escapejs }}";
+        const usedBuildings = JSON.parse(
+          document.getElementById("used-buildings-data").textContent
+        );
+        const isGameWon = "{{ request.session.win_condition_met }}" === "True";
+        const isGameLost =
+          "{{ request.session.all_lost_conditions_met|yesno:'True,False' }}" ===
+          "True";
+
+        console.log("Used Buildings:", usedBuildings);
+        console.log("Game Won Condition:", isGameWon);
+        console.log("Game Lost Condition:", isGameLost);
+
+        // Handle game-lost condition
+        if (isGameLost) {
+          console.log("Game Lost: Waiting for user interaction...");
+          loseSound
+            .play()
+            .catch((err) => console.error("Error playing boo.wav:", err));
+        } else if (isGameWon) {
+          // Execute only if game is not lost
+          console.log("Playing applause sound for win.");
+          winSound
+            .play()
+            .catch((err) => console.error("Error playing applause4.mp3:", err));
+
+          ninjaSound.play();
+
+          let count = 0;
+          const repeatConfetti = setInterval(() => {
+            confetti({
+              particleCount: 200,
+              spread: 100,
+              origin: { y: 0.5 },
+              colors: ["#ffd700", "#ffb800", "#e6ac00"],
+            });
+            count++;
+            if (count >= 11) clearInterval(repeatConfetti);
+          }, 1000);
+        }
+
+        // Gold Ninja click sound
+        const goldNinja = document.getElementById("gold-ninja");
+        let isPlaying = false;
+
+        goldNinja.addEventListener("click", function () {
+          if (isPlaying) {
+            ninjaSound.pause();
+            ninjaSound.currentTime = 0;
+          } else {
+            ninjaSound.play();
+          }
+          isPlaying = !isPlaying;
+        });
+
+        ninjaSound.addEventListener("ended", function () {
+          isPlaying = false;
+        });
+
+        // Handle form submissions
+        document.querySelectorAll("form").forEach((form) => {
+          form.addEventListener("submit", function () {
+            const building = this.querySelector("input[name='building']").value;
+            console.log("Submitting form for:", building);
+          });
+        });
+
+        // Play session-assigned sound
+        if (soundToPlay) {
+          const sessionAudio = new Audio("/" + soundToPlay);
+          sessionAudio
+            .play()
+            .catch((err) => console.warn("Sound playback error:", err));
+        } else {
+          console.log("No sound assigned.");
+        }
+      });
+    </script>
+  </body>
+</html>

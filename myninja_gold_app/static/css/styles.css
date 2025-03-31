@@ -1,0 +1,382 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box; /* Ensures padding and borders are included in width/height calculations */
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Responsive container */
+#container {
+  background-color: black;
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 20px 15px;
+  display: flex; /* Makes it flexible */
+  flex-direction: column; /* Default direction is column */
+  align-items: center; /* Centers children horizontally */
+}
+
+.flex-div {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Links styling */
+.my-total {
+  font-size: 2em;
+}
+
+.loose {
+  color: red;
+  text-align: center;
+  margin-top: -15px;
+  margin-bottom: 25px;
+  font-size: 1.7em;
+}
+
+.win {
+  color: gold;
+  text-align: center;
+  margin-top: -15px;
+  margin-bottom: 25px;
+  font-size: 2em;
+}
+
+a {
+  color: gold;
+  font-size: 30px;
+  text-decoration: none;
+  display: inline-block;
+  /* margin-top: 20px; */
+}
+
+img {
+  width: 100px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+/* Use flex for location cards */
+.location-container {
+  display: flex; /* Enables a row layout for location cards */
+  flex-wrap: wrap; /* Allows cards to wrap on smaller screens */
+  justify-content: center; /* Centers cards within the container */
+  gap: 20px; /* Adds space between the cards */
+}
+
+.location {
+  background-color: #00ff7f;
+  margin: 0px;
+  padding: 20px;
+  width: 100%; /* Default to full width */
+  max-width: 260px; /* Limit the maximum width of the cards */
+  text-align: center;
+  border: 2px solid black;
+  border-radius: 10px; /* Added some rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for better visuals */
+}
+
+/* Headings */
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  color: white;
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.5em;
+}
+
+/* Paragraphs */
+p {
+  margin-top: 15px;
+  line-height: 1.5em;
+  font-size: 1em;
+}
+
+/* Gold button */
+.gold {
+  margin-top: 5px;
+  margin-bottom: -20px;
+  background-color: gold;
+  font-size: 15px;
+  padding: 10px 15px;
+  border: none; /* Removes default borders */
+  border-radius: 10px;
+  cursor: pointer; /* Adds a hand cursor */
+  transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.gold:hover {
+  background-color: darkgoldenrod; /* Darker gold color on hover */
+}
+
+.note {
+  color: white;
+  margin-top: -5px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 24px;
+}
+
+.until {
+  /* margin: 0px 30px; */
+  margin-top: 0px;
+  margin-bottom: -3px;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+/* Activity log */
+.activity {
+  background-color: gold;
+  width: 100%;
+  max-width: 800px; /* Limits the width of the activity log */
+  padding: 20px;
+  text-align: center;
+  margin: 20px auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for activity log */
+}
+
+.activity p {
+  font-size: 1em;
+  font-weight: bolder;
+}
+
+/* Colors for activity */
+.red {
+  color: red;
+  font-size: 1.3em;
+}
+
+.green {
+  color: green;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  #container {
+    padding: 10px;
+  }
+
+  h3 {
+    font-size: 1.3em;
+    padding: 0px 5px;
+  }
+
+  /* New */
+  #container h3 {
+    font-size: 1.1em;
+  }
+
+  img {
+    width: 55px;
+    height: auto;
+    margin-top: -17px;
+    margin-bottom: -17px;
+  }
+
+  a {
+    font-size: 1em;
+    padding: 0px 5px;
+    color: gold;
+    margin-bottom: -12px;
+    max-width: 100%;
+    display: block; /* Makes the link take full width */
+  }
+
+  .note {
+    color: white;
+    margin-bottom: -3px;
+    margin-top: -3px;
+    text-align: center;
+    font-size: 0.85em;
+  }
+  /* New */
+
+  .location {
+    margin: 10px 10px;
+  }
+
+  .location {
+    max-width: 260px;
+    padding: 5px;
+    padding-bottom: 5px;
+    margin-bottom: -25px;
+  }
+
+  h2 {
+    margin-bottom: -15px;
+    font-size: 1.3em;
+  }
+
+  p {
+    margin-bottom: 0px;
+  }
+
+  h6 {
+    margin-top: 15px;
+  }
+
+  .until {
+    /* margin: 0px 30px; */
+    /* margin-top: 2px; */
+    margin-top: 0px;
+    /* font-size: 0.9em; */
+    font-weight: bold;
+  }
+
+  .gold {
+    font-size: 13px;
+    margin-top: 0px;
+  }
+
+  h4 {
+    color: white;
+    margin-top: 40px;
+    margin-bottom: -8px;
+    font-size: 1.5em;
+  }
+
+  .activity {
+    padding: 15px;
+    width: 90%; /* Use 90% of the screen width */
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Top Strea */
+  #container {
+    padding: 10px;
+  }
+
+  .flex-div {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .my-total {
+    font-size: 1.3em;
+    padding: 0px 5px;
+    min-width: 200px;
+    white-space: nowrap;
+  }
+
+  .loose {
+    color: red;
+    text-align: center;
+    margin-top: -15px;
+    margin-bottom: 25px;
+    font-size: 1em;
+  }
+
+  .win {
+    color: gold;
+    text-align: center;
+    margin-top: -15px;
+    margin-bottom: 25px;
+    font-size: 1em;
+  }
+
+  #container h3 {
+    font-size: 1.3em;
+  }
+
+  img {
+    width: 65px;
+    height: auto;
+    margin-top: -16px;
+    margin-bottom: 5px;
+  }
+
+  a {
+    font-size: 1.3em;
+    padding: 0px 5px;
+    color: gold;
+    margin-bottom: -12px;
+    max-width: 100%;
+    display: block; /* Makes the link take full width */
+  }
+
+  .note {
+    color: white;
+    margin-bottom: 0px;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 0.65em;
+  }
+
+  /* Locations */
+  .location {
+    max-width: 260px;
+    padding: 12px;
+    padding-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: -20px;
+  }
+
+  h2 {
+    margin-top: -10px;
+    font-size: 1.5em;
+  }
+
+  p {
+    /* margin-top: 0.3em; */
+    line-height: 1.5em;
+    flex: 4;
+    flex-basis: 30%;
+    /* width: 200px; */
+    font-size: 0.75em;
+    margin-top: -3px;
+  }
+
+  .gold {
+    font-size: 15px;
+    margin-top: -0px;
+    margin-bottom: -12px;
+    margin: 0px 40px;
+    padding: 8px 10px;
+  }
+
+  .until {
+    margin: 0px 30px;
+    margin-top: 2px;
+    margin-bottom: -3px;
+    font-size: 0.9em;
+    font-weight: bold;
+  }
+
+  /* div .been {
+    margin-bottom: -30px;
+  } */
+
+  /* Activities */
+  h4 {
+    color: white;
+    margin-top: 30px;
+    margin-bottom: -8px;
+    font-size: 1.5em;
+  }
+
+  /* Colors for activity */
+  .activity .red {
+    color: red;
+    font-size: 0.8em;
+  }
+
+  .activity .green {
+    color: green;
+    font-size: 0.8em;
+  }
+}
