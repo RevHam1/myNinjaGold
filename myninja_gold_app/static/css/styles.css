@@ -11,7 +11,7 @@ body {
 /* Responsive container */
 #container {
   background-color: black;
-  max-width: 1250px;
+  max-width: 1350px;
   margin: 0 auto;
   padding: 20px 15px;
   display: flex; /* Makes it flexible */
@@ -57,7 +57,7 @@ a {
 img {
   width: 100px;
   height: auto;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
 /* Use flex for location cards */
@@ -66,6 +66,8 @@ img {
   flex-wrap: wrap; /* Allows cards to wrap on smaller screens */
   justify-content: center; /* Centers cards within the container */
   gap: 20px; /* Adds space between the cards */
+  flex-direction: row;
+  width: 140%;
 }
 
 .location {
@@ -118,8 +120,8 @@ p {
 
 .note {
   color: white;
-  margin-top: -5px;
-  margin-bottom: 15px;
+  margin-top: 40px;
+  margin-bottom: 20px;
   text-align: center;
   font-size: 24px;
 }
@@ -139,7 +141,7 @@ p {
   max-width: 800px; /* Limits the width of the activity log */
   padding: 20px;
   text-align: center;
-  margin: 20px auto;
+  margin: 30px auto;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for activity log */
 }
