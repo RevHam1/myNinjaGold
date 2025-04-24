@@ -18,7 +18,7 @@ SECRET_KEY = config('SECRET_KEY')
 # DEBUG = True
 DEBUG = config('DEBUG', cast=bool, default=False)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', "ninja-gold.fly.dev",'ninja-gold.fly.dev', 'myninja-gold.fly.dev', 'RevHam1.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', "ninja-gold.fly.dev",'ninja-gold.fly.dev', 'myninja-gold.fly.dev', 'RevHam1.pythonanywhere.com', 'RevHam.pythonanywhere.com']
 
 # CSRF_TRUSTED_ORIGINS = ['https:myninja-gold.fly.dev']
 CSRF_TRUSTED_ORIGINS = ["https://ninja-gold.fly.dev"]
