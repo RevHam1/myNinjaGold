@@ -71,17 +71,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'myninja_gold.wsgi.application'
 
-if os.getenv("DJANGO_ENV") == "production":
-    DATABASES = {
-        'default': dj_database_url.parse(config('DATABASE_URL'))
-    }
-else:
-    DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-    }
+# if os.getenv("DJANGO_ENV") == "production":
+#     DATABASES = {
+#         'default': dj_database_url.parse(config('DATABASE_URL'))
+#     }
+# else:
+#     DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+#     }
     # DATABASES = {
     #     'default': dj_database_url.parse(
     #         config('DATABASE_URL', default='sqlite:///' + os.path.join(os.getcwd(), 'db.sqlite3'))
@@ -92,12 +92,12 @@ else:
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 # DATABASES = {
