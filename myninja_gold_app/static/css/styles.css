@@ -46,6 +46,14 @@ body {
   font-size: 2em;
 }
 
+.neutral {
+  color: gold;
+  text-align: center;
+  margin-top: -15px;
+  margin-bottom: 25px;
+  font-size: 1.5em;
+}
+
 a {
   color: gold;
   font-size: 30px;
@@ -282,6 +290,14 @@ p {
 
   .win {
     color: gold;
+    text-align: center;
+    margin-top: -15px;
+    margin-bottom: 25px;
+    font-size: 1em;
+  }
+
+  .neutral {
+    color: white;
     text-align: center;
     margin-top: -15px;
     margin-bottom: 25px;

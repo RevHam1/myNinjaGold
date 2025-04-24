@@ -18,15 +18,21 @@
       </h3>
       {% if request.session.all_lost_conditions_met %}
       <p class="loose">
-        You've been at the "Casino" too long. You "LOST" Take a break or Reset
-        Gold.
+        You've been at the "Casino" too long. You "LOST". Take a break or reset
+        your gold.
       </p>
       {% elif request.session.win_condition_met %}
       <p class="win">
         Congratulations! You've reached the maximum Casino visits and secured a
         "BIG WIN!"
       </p>
+      {% elif request.session.broke_even_condition_met %}
+      <p class="neutral">
+        You've played wisely and broke even. No gain, no loss! Perhaps try again
+        or call it a day.
+      </p>
       {% endif %}
+
       <div class="flex-div">
         <div style="text-align: center">
           <img

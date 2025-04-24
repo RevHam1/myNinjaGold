@@ -90,8 +90,8 @@ def process_money(request):
             'sound': 'static/sounds/farm.wav'
         },
         'cave': {
-            'min_gold': 100,
-            'max_gold': 250,
+            'min_gold': 75,
+            'max_gold': 150,
             'message': "You Found {gold} ounces of Gold in a Cave! Yay!",
             'sound': 'static/sounds/cave.wav'
         },
@@ -150,7 +150,7 @@ def process_money(request):
             request.session['casino_visits'] += 1
             gold = random.choices(
                 population=[random.randint(-50, -1), random.randint(1, 50), 0],
-                weights=[85, 10, 5],  # 85% lose, 10% win, 5% neutral
+                weights=[90, 5, 5],  # 85% lose, 10% win, 5% neutral
                 k=1
             )[0]
             request.session['gold'] += gold
@@ -176,6 +176,8 @@ def process_money(request):
     house_used = 'house' in request.session['used_buildings']
     negative_gold = request.session['gold'] < 0
     max_casino_visits_reached = request.session['casino_visits'] >= 15
+
+    request.session['broke_even_condition_met'] = 0
 
     request.session['all_lost_conditions_met'] = (
         farm_used and cave_used and house_used and negative_gold
