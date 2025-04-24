@@ -11,14 +11,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = config('SECRET_KEY')
-SECRET_KEY = 'django-insecure-nrlyp1cijidb3)h1)%if&mbbsxf^#%wiwm6fwm!&&h8(e*wl-&'
+SECRET_KEY = config('SECRET_KEY')
+# SECRET_KEY = 'django-insecure-nrlyp1cijidb3)h1)%if&mbbsxf^#%wiwm6fwm!&&h8(e*wl-&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = config('DEBUG')
+# DEBUG = True
+DEBUG = config('DEBUG', cast=bool, default=False)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', "ninja-gold.fly.dev",'ninja-gold.fly.dev', 'myninja-gold.fly.dev']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', "ninja-gold.fly.dev",'ninja-gold.fly.dev', 'myninja-gold.fly.dev', 'RevHam1.pythonanywhere.com']
 
 # CSRF_TRUSTED_ORIGINS = ['https:myninja-gold.fly.dev']
 CSRF_TRUSTED_ORIGINS = ["https://ninja-gold.fly.dev"]
