@@ -122,7 +122,9 @@
       <h4>Activities</h4>
 
       <div class="activity">
-        {%for activity in request.session.activites%} {%if "Yay" in activity%}
+        {%for activity in request.session.activities%}
+        <!-- Space -->
+        {%if "Yay" in activity%}
         <p class="green">{{activity}}</p>
         {% else %}
         <p class="red">{{activity}}</p>

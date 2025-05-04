@@ -6,18 +6,6 @@ from django.shortcuts import redirect, render
 # ==== Main Views ====
 
 
-# def index(request):
-#     """Landing page – initializes session variables."""
-#     request.session.setdefault('gold', 0)
-#     request.session.setdefault('activities', [])
-#     request.session.setdefault('used_buildings', [])
-#     request.session.setdefault('casino_visits', 0)
-
-#     # Clear the sound after it has been used once
-#     request.session.pop('sound_to_play', None)
-
-#     return render(request, 'index.html')
-
 def index(request):
     """Landing page – initializes session variables."""
     request.session.setdefault('gold', 0)
