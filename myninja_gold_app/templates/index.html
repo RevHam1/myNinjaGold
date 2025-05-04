@@ -12,6 +12,16 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   </head>
   <body>
+    {% if sound_to_play %}
+    <audio autoplay>
+      <source
+        src="/{{ sound_to_play }}"
+        type="audio/{{ sound_to_play|slice:'-3:' }}"
+      />
+      Your browser does not support the audio element.
+    </audio>
+    {% endif %}
+
     <div id="container">
       <h3 class="my-total">
         My Ninja Gold Total is {{ request.session.gold }}
