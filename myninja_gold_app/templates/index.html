@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   </head>
   <body>
+  <!--
     {% if sound_to_play %}
     <audio autoplay>
       <source
@@ -21,10 +22,11 @@
       Your browser does not support the audio element.
     </audio>
     {% endif %}
+    -->
 
     <div id="container">
       <h3 class="my-total">
-        My Ninja Gold Total is {{ request.session.gold }}
+        My Ninja Gold Total is {{ request.session.gold }} Ounces
       </h3>
       {% if request.session.all_lost_conditions_met %}
       <p class="loose">
@@ -51,7 +53,19 @@
             alt="Gold Ninja"
           />
         </div>
-        <a href="/reset">Reset Gold</a>
+
+        <a href="/reset">Reset Gold</a>        
+
+        {% if request.session.activities %}
+        <div aria-live="polite" style="text-align: center; margin: 15px 0;">
+          {% with latest=request.session.activities|last %}
+            <p style="color: gold; font-size: 24px; font-weight: bold;">
+              {{ latest }}
+            </p>
+          {% endwith %}
+        </div>
+        {% endif %}
+  
         <p class="note">
           Find Gold in each area below and see your Gold grow. But be careful at
           the Casino...
@@ -83,7 +97,7 @@
           {% if "cave" in request.session.used_buildings %}
           <p style="color: red">You Discovered in a Cave.</p>
           {% endif %}
-        </div>
+        </div>eac
         <!-- House -->
         <div class="location">
           <h2>House</h2>
@@ -136,8 +150,13 @@
         const winSound = new Audio("/static/sounds/applause4.mp3");
         const loseSound = new Audio("/static/sounds/boo.wav");
         const ninjaSound = new Audio("{% static 'sounds/ninjagold.wav' %}");
+
+        /* const soundToPlay =
+          "{{ request.session.sound_to_play|default:''|escapejs }}"; */
+
         const soundToPlay =
-          "{{ request.session.sound_to_play|default:''|escapejs }}";
+          "{{ sound_to_play|default:''|escapejs }}";
+
         const usedBuildings = JSON.parse(
           document.getElementById("used-buildings-data").textContent
         );
