@@ -109,6 +109,61 @@ p {
   font-size: 1em;
 }
 
+/* Ninja Gold sound buttons */
+.sound-controls {
+  width: 100%;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.sound-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sound-controls .sound-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 160px;
+  min-height: 48px;
+  padding: 12px 20px;
+  border: 2px solid #ffd700;
+  border-radius: 12px;
+  background: #171717;
+  color: #ffd700;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.sound-controls .sound-button[aria-pressed="true"] {
+  background: #ffd700;
+  color: #111;
+}
+
+.sound-controls .sound-button:hover {
+  background: #ffe766;
+  color: #111;
+}
+
+.sound-controls .sound-button:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 4px;
+}
+
+.sound-controls #sound-status {
+  margin-top: 12px;
+  color: #ffd700;
+  font-size: 15px;
+}
+
+
+
 /* Gold button */
 .gold {
   margin-top: 5px;

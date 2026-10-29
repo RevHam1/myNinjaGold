@@ -26,7 +26,7 @@
 
     <div id="container">
       <h3 class="my-total">
-        My Ninja Gold Total is {{ request.session.gold }} Ounces
+        Play Ninja Gold.<br />Your Gold Total is {{ request.session.gold }} Ounces of Gold
       </h3>
       {% if request.session.all_lost_conditions_met %}
       <p class="loose">
@@ -54,7 +54,28 @@
           />
         </div>
 
-        <a href="/reset">Reset Gold</a>        
+        <a href="/reset">Reset Gold</a> 
+
+
+        <div class="sound-controls">
+  <div class="sound-buttons">
+    <button type="button" id="start-sound" class="sound-button">
+      <span aria-hidden="true">▶</span> Start Sound
+    </button>
+
+    <button type="button" id="stop-sound" class="sound-button">
+      <span aria-hidden="true">■</span> Stop Sound
+    </button>
+  </div>
+
+  <p id="sound-status" role="status"></p>
+</div>
+
+
+
+
+        
+               
 
         {% if request.session.activities %}
         <div aria-live="polite" style="text-align: center; margin: 15px 0;">
@@ -65,73 +86,94 @@
           {% endwith %}
         </div>
         {% endif %}
+
+        
+        
+
   
         <p class="note">
-          Find Gold in each area below and see your Gold grow. But be careful at
-          the Casino...
+          Search each location once. Play the Casino up to 15 times while you have gold
         </p>
       </div>
       <div class="location-container">
         <!-- Farm -->
-        <div class="location">
-          <h2>Farm</h2>
-          <p>Earns 50-100 ounces of gold</p>
-          <form action="/process_money" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="building" value="farm" />
-            <input class="gold" type="submit" value="Find Gold!" />
-          </form>
-          {% if "farm" in request.session.used_buildings %}
-          <p style="color: red">You've Searched on a Farm.</p>
-          {% endif %}
-        </div>
-        <!-- Cave -->
-        <div class="location">
-          <h2>Cave</h2>
-          <p>Earns 100-250 ounces of gold</p>
-          <form action="/process_money" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="building" value="cave" />
-            <input class="gold" type="submit" value="Find Gold!" />
-          </form>
-          {% if "cave" in request.session.used_buildings %}
-          <p style="color: red">You Discovered in a Cave.</p>
-          {% endif %}
-        </div>eac
-        <!-- House -->
-        <div class="location">
-          <h2>House</h2>
-          <p>Earns 20-50 ounces of gold</p>
-          <form action="/process_money" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="building" value="house" />
-            <input class="gold" type="submit" value="Find Gold!" />
-          </form>
-          {% if "house" in request.session.used_buildings %}
-          <p style="color: red">You Stolen from a House.</p>
-          {% endif %}
-        </div>
+<div class="location">
+  <h2>Farm</h2>
+  <p>Earns 50-100 ounces of gold</p>
+
+  {% if "farm" in request.session.used_buildings %}
+    <p style="font-weight: bold;">You've Searched on a Farm.</p>
+  {% else %}
+    <form action="/process_money" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="building" value="farm" />
+      <input class="gold" type="submit" value="Find Gold!" />
+    </form>
+  {% endif %}
+</div>
+
+<!-- Cave -->
+<div class="location">
+  <h2>Cave</h2>
+  <p>Earns 75-150 ounces of gold</p>
+
+  {% if "cave" in request.session.used_buildings %}
+    <p style="font-weight: bold;">You've Discovered Gold in a Cave.</p>
+  {% else %}
+    <form action="/process_money" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="building" value="cave" />
+      <input class="gold" type="submit" value="Find Gold!" />
+    </form>
+  {% endif %}
+</div>
+
+<!-- House -->
+<div class="location">
+  <h2>House</h2>
+  <p>Earns 20-50 ounces of gold</p>
+
+  {% if "house" in request.session.used_buildings %}
+    <p style="font-weight: bold;">You've Stolen from a House.</p>
+  {% else %}
+    <form action="/process_money" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="building" value="house" />
+      <input class="gold" type="submit" value="Find Gold!" />
+    </form>
+  {% endif %}
+</div>
+
         <!-- Casino -->
         <div class="location">
+          
           <h2>Casino</h2>
-          {% if request.session.gold < 1 %}
+
+<p>
+  Casino visits: {{ request.session.casino_visits|default:0 }} / 15
+</p>
+
+{% if request.session.gold < 1 %}
+
+
           <p style="color: red; font-size: medium; text-align: center">
-            No Gold! No Casino!
+            No Gold! No Play! First Find Gold
           </p>
           <form action="/process_money" method="POST">
             {% csrf_token %}
             <input type="hidden" name="building" value="casino" />
-            <input class="gold" type="submit" value="Need Gold!" />
+            <input class="gold" type="submit" value="Need Gold To Play" />
           </form>
           {% else %}
           <p>Earn/lose 0-50 Gold ounces</p>
           <form action="/process_money" method="POST">
             {% csrf_token %}
             <input type="hidden" name="building" value="casino" />
-            <input class="gold" type="submit" value="Play UNTIL" />
+            <input class="gold" type="submit" value="Play until you Win or Lose" />
           </form>
           {% endif %}
         </div>
+        
       </div>
       <h4>Activities</h4>
 
@@ -145,94 +187,176 @@
         {% endif %} {% endfor %}
       </div>
     </div>
+    
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const winSound = new Audio("/static/sounds/applause4.mp3");
-        const loseSound = new Audio("/static/sounds/boo.wav");
-        const ninjaSound = new Audio("{% static 'sounds/ninjagold.wav' %}");
+  document.addEventListener("DOMContentLoaded", function () {
+    const winSound = new Audio("{% static 'sounds/applause4.mp3' %}");
+    const loseSound = new Audio("{% static 'sounds/boo.wav' %}");
+    const ninjaSound = new Audio("{% static 'sounds/ninjagold.wav' %}");
 
-        /* const soundToPlay =
-          "{{ request.session.sound_to_play|default:''|escapejs }}"; */
+    const soundToPlay = "{{ sound_to_play|default:''|escapejs }}";
 
-        const soundToPlay =
-          "{{ sound_to_play|default:''|escapejs }}";
+    const startButton = document.getElementById("start-sound");
+    const stopButton = document.getElementById("stop-sound");
+    const soundStatus = document.getElementById("sound-status");
+    const goldNinja = document.getElementById("gold-ninja");
 
-        const usedBuildings = JSON.parse(
-          document.getElementById("used-buildings-data").textContent
+    const isGameWon =
+      "{{ request.session.win_condition_met|yesno:'True,False' }}" === "True";
+
+    const isGameLost =
+      "{{ request.session.all_lost_conditions_met|yesno:'True,False' }}" ===
+      "True";
+
+    // Create the sound assigned by the Django view.
+    const sessionAudio = soundToPlay
+      ? new Audio(
+          soundToPlay.startsWith("/")
+            ? soundToPlay
+            : "/" + soundToPlay
+        )
+      : null;
+
+    const allSounds = [winSound, loseSound, ninjaSound];
+
+    if (sessionAudio) {
+      allSounds.push(sessionAudio);
+    }
+
+    // Choose the audio for the current game result.
+    // Win/loss sounds take priority over the session sound.
+    let currentSounds = [];
+
+    if (isGameLost) {
+      currentSounds = [loseSound];
+    } else if (isGameWon) {
+      currentSounds = [winSound, ninjaSound];
+    } else if (sessionAudio) {
+      currentSounds = [sessionAudio];
+    }
+
+    // Sound is enabled by default.
+    let soundEnabled = true;
+
+    try {
+      soundEnabled = localStorage.getItem("ninjagold-sound") !== "off";
+    } catch (error) {
+      // Buttons still work if browser storage is unavailable.
+    }
+
+    function savePreference() {
+      try {
+        localStorage.setItem(
+          "ninjagold-sound",
+          soundEnabled ? "on" : "off"
         );
-        const isGameWon = "{{ request.session.win_condition_met }}" === "True";
-        const isGameLost =
-          "{{ request.session.all_lost_conditions_met|yesno:'True,False' }}" ===
-          "True";
+      } catch (error) {
+        // Saving the preference is optional.
+      }
+    }
 
-        console.log("Used Buildings:", usedBuildings);
-        console.log("Game Won Condition:", isGameWon);
-        console.log("Game Lost Condition:", isGameLost);
+    function updateStatus(message) {
+      soundStatus.textContent =
+        message || (soundEnabled ? "Sound is on." : "Sound is off.");
 
-        // Handle game-lost condition
-        if (isGameLost) {
-          console.log("Game Lost: Waiting for user interaction...");
-          loseSound
-            .play()
-            .catch((err) => console.error("Error playing boo.wav:", err));
-        } else if (isGameWon) {
-          // Execute only if game is not lost
-          console.log("Playing applause sound for win.");
-          winSound
-            .play()
-            .catch((err) => console.error("Error playing applause4.mp3:", err));
+      startButton.setAttribute("aria-pressed", String(soundEnabled));
+      stopButton.setAttribute("aria-pressed", String(!soundEnabled));
+    }
 
-          ninjaSound.play();
-
-          let count = 0;
-          const repeatConfetti = setInterval(() => {
-            confetti({
-              particleCount: 200,
-              spread: 100,
-              origin: { y: 0.5 },
-              colors: ["#ffd700", "#ffb800", "#e6ac00"],
-            });
-            count++;
-            if (count >= 11) clearInterval(repeatConfetti);
-          }, 1000);
-        }
-
-        // Gold Ninja click sound
-        const goldNinja = document.getElementById("gold-ninja");
-        let isPlaying = false;
-
-        goldNinja.addEventListener("click", function () {
-          if (isPlaying) {
-            ninjaSound.pause();
-            ninjaSound.currentTime = 0;
-          } else {
-            ninjaSound.play();
-          }
-          isPlaying = !isPlaying;
-        });
-
-        ninjaSound.addEventListener("ended", function () {
-          isPlaying = false;
-        });
-
-        // Handle form submissions
-        document.querySelectorAll("form").forEach((form) => {
-          form.addEventListener("submit", function () {
-            const building = this.querySelector("input[name='building']").value;
-            console.log("Submitting form for:", building);
-          });
-        });
-
-        // Play session-assigned sound
-        if (soundToPlay) {
-          const sessionAudio = new Audio("/" + soundToPlay);
-          sessionAudio
-            .play()
-            .catch((err) => console.warn("Sound playback error:", err));
-        } else {
-          console.log("No sound assigned.");
-        }
+    function stopAllSounds() {
+      allSounds.forEach(function (audio) {
+        audio.pause();
+        audio.currentTime = 0;
       });
-    </script>
+    }
+
+    function playSound(audio) {
+      if (!soundEnabled) {
+        return;
+      }
+
+      const playRequest = audio.play();
+
+      if (playRequest) {
+        playRequest.catch(function () {
+          if (soundEnabled) {
+            updateStatus("Click Start Sound to enable playback.");
+          }
+        });
+      }
+    }
+
+    // Start or restart the current result sound.
+    // If no result sound is available, play the Ninja theme.
+    startButton.addEventListener("click", function () {
+      soundEnabled = true;
+      savePreference();
+      stopAllSounds();
+      updateStatus();
+
+      if (currentSounds.length === 0) {
+        currentSounds = [ninjaSound];
+      }
+
+      currentSounds.forEach(playSound);
+    });
+
+    // Immediately stop every sound and disable future audio.
+    stopButton.addEventListener("click", function () {
+      soundEnabled = false;
+      savePreference();
+      stopAllSounds();
+      updateStatus();
+    });
+
+    // Clicking the Ninja toggles its theme.
+    goldNinja.addEventListener("click", function () {
+      if (!ninjaSound.paused) {
+        ninjaSound.pause();
+        ninjaSound.currentTime = 0;
+        return;
+      }
+
+      if (!soundEnabled) {
+        updateStatus("Sound is off. Click Start Sound first.");
+        return;
+      }
+
+      stopAllSounds();
+      currentSounds = [ninjaSound];
+      updateStatus();
+      playSound(ninjaSound);
+    });
+
+    // Keep the winning confetti independent of sound controls.
+    if (isGameWon && !isGameLost && typeof confetti === "function") {
+      let count = 0;
+
+      const repeatConfetti = setInterval(function () {
+        confetti({
+          particleCount: 200,
+          spread: 100,
+          origin: { y: 0.5 },
+          colors: ["#ffd700", "#ffb800", "#e6ac00"],
+        });
+
+        count++;
+
+        if (count >= 11) {
+          clearInterval(repeatConfetti);
+        }
+      }, 1000);
+    }
+
+    updateStatus();
+
+    // Browsers may require clicking Start Sound before allowing audio.
+    if (soundEnabled) {
+      currentSounds.forEach(playSound);
+    }
+  });
+</script>
+
+
   </body>
 </html>
