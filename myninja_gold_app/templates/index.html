@@ -6,7 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-    <link rel="icon" href="{% static 'favicon.ico' %}" />
+   
+    <link rel="icon" type="image/jpeg" href="{% static 'images/ninja-icon.jpg' %}" />
+    <link rel="apple-touch-icon" href="{% static 'images/ninja-icon.jpg' %}" />
+
     <title>Ninja Gold</title>
     {{ request.session.used_buildings|json_script:"used-buildings-data" }}
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
