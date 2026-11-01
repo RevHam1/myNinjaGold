@@ -9,6 +9,7 @@ urlpatterns = [
     path('ninja_gold/', views.ninja_gold_game, name='ninja_gold_game'),
     path('reset/', views.reset, name='reset'),
     path('get_gold_value/', views.get_gold_value, name='get_gold_value'),
+    path('start_game', views.start_game, name='start_game'),
 
     # path('supabasedata/', views.your_view, name='supabasedata'),
 ]

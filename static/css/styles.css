@@ -5,18 +5,27 @@
 }
 
 body {
+  margin: 0;
   font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+html {
+  font-size: 16px;
 }
 
 /* Responsive container */
 #container {
-  background-color: black;
-  max-width: 1350px;
-  margin: 0 auto;
-  padding: 20px 15px;
-  display: flex; /* Makes it flexible */
-  flex-direction: column; /* Default direction is column */
-  align-items: center; /* Centers children horizontally */
+    width: 100%;
+    min-height: 100vh;
+    background-color: black;
+    max-width: 1350px;
+    margin: 0 auto;
+    padding: 20px 15px;
+    display: flex; /* Makes it flexible */
+    flex-direction: column; /* Default direction is column */
+    align-items: center; /* Centers children horizontally */
 }
 
 .flex-div {
@@ -26,8 +35,13 @@ body {
 }
 
 /* Links styling */
-.my-total {
-  font-size: 2em;
+#container .my-total {
+  color: white;
+  font-size: 24px;
+  line-height: 1.3;
+  text-align: center;
+  margin: 0 0 20px;
+  padding: 0;
 }
 
 .loose {
@@ -46,37 +60,43 @@ body {
   font-size: 2em;
 }
 
-a {
-  color: gold;
-  font-size: 30px;
-  text-decoration: none;
+.flex-div > a {
   display: inline-block;
-  /* margin-top: 20px; */
+  color: gold;
+  font-size: 22px;
+  line-height: 1.4;
+  text-decoration: none;
+  margin: 0 0 12px;
 }
 
-img {
-  width: 100px;
+#gold-ninja {
+  display: block;
+  width: 80px;
+  max-width: 100%;
   height: auto;
-  margin-bottom: 12px;
+  margin: 0 auto 12px;
+}
+
+#player-turn {
+  scroll-margin-top: 20px;
 }
 
 /* Use flex for location cards */
 .location-container {
-  display: flex; /* Enables a row layout for location cards */
-  flex-wrap: wrap; /* Allows cards to wrap on smaller screens */
-  justify-content: center; /* Centers cards within the container */
-  gap: 20px; /* Adds space between the cards */
-  flex-direction: row;
-  width: 140%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
 }
 
 .location {
   background-color: #00ff7f;
   margin: 0px;
   padding: 20px;
-  width: 100%; /* Default to full width */
-  max-width: 260px; /* Limit the maximum width of the cards */
-  text-align: center;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  overflow-wrap: anywhere;text-align: center;
   border: 2px solid black;
   border-radius: 10px; /* Added some rounded corners */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for better visuals */
@@ -103,15 +123,18 @@ p {
 
 /* Gold button */
 .gold {
-  margin-top: 5px;
-  margin-bottom: -20px;
+  margin: 5px 0 0;
   background-color: gold;
+  color: black;
   font-size: 15px;
   padding: 10px 15px;
-  border: none; /* Removes default borders */
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+  border: none;
   border-radius: 10px;
-  cursor: pointer; /* Adds a hand cursor */
-  transition: background-color 0.3s ease; /* Smooth background color transition */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .gold:hover {
@@ -120,10 +143,13 @@ p {
 
 .note {
   color: white;
-  margin-top: 40px;
-  margin-bottom: 20px;
+  width: 100%;
+  max-width: 800px;
+  margin: 24px auto 20px;
+  padding: 0 12px;
   text-align: center;
-  font-size: 24px;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .until {
@@ -161,481 +187,155 @@ p {
   color: green;
 }
 
-/* Responsive adjustments for smaller screens */
-@media (max-width: 768px) {
-  #container {
-    padding: 10px;
-  }
-
-  h3 {
-    font-size: 1.3em;
-    padding: 0px 5px;
-  }
-
-  /* New */
-  #container h3 {
-    font-size: 1.1em;
-  }
-
-  img {
-    width: 55px;
-    height: auto;
-    margin-top: -17px;
-    margin-bottom: -17px;
-  }
-
-  a {
-    font-size: 1em;
-    padding: 0px 5px;
-    color: gold;
-    margin-bottom: -12px;
-    max-width: 100%;
-    display: block; /* Makes the link take full width */
-  }
-
-  .note {
-    color: white;
-    margin-bottom: -3px;
-    margin-top: -3px;
-    text-align: center;
-    font-size: 0.85em;
-  }
-  /* New */
-
-  .location {
-    margin: 10px 10px;
-  }
-
-  .location {
-    max-width: 260px;
-    padding: 5px;
-    padding-bottom: 5px;
-    margin-bottom: -25px;
-  }
-
-  h2 {
-    margin-bottom: -15px;
-    font-size: 1.3em;
-  }
-
-  p {
-    margin-bottom: 0px;
-  }
-
-  h6 {
-    margin-top: 15px;
-  }
-
-  .until {
-    /* margin: 0px 30px; */
-    /* margin-top: 2px; */
-    margin-top: 0px;
-    /* font-size: 0.9em; */
-    font-weight: bold;
-  }
-
-  .gold {
-    font-size: 13px;
-    margin-top: 0px;
-  }
-
-  h4 {
-    color: white;
-    margin-top: 40px;
-    margin-bottom: -8px;
-    font-size: 1.5em;
-  }
-
-  .activity {
-    padding: 15px;
-    width: 90%; /* Use 90% of the screen width */
-    font-size: 0.9em;
-  }
-}
-
-@media (max-width: 480px) {
-  /* Top Strea */
-  #container {
-    padding: 10px;
-  }
-
-  .flex-div {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-  }
-
-  .my-total {
-    font-size: 1.3em;
-    padding: 0px 5px;
-    min-width: 200px;
-    white-space: nowrap;
-  }
-
-  .loose {
-    color: red;
-    text-align: center;
-    margin-top: -15px;
-    margin-bottom: 25px;
-    font-size: 1em;
-  }
-
-  .win {
-    color: gold;
-    text-align: center;
-    margin-top: -15px;
-    margin-bottom: 25px;
-    font-size: 1em;
-  }
-
-  #container h3 {
-    font-size: 1.3em;
-  }
-
-  img {
-    width: 65px;
-    height: auto;
-    margin-top: -16px;
-    margin-bottom: 5px;
-  }
-
-  a {
-    font-size: 1.3em;
-    padding: 0px 5px;
-    color: gold;
-    margin-bottom: -12px;
-    max-width: 100%;
-    display: block; /* Makes the link take full width */
-  }
-
-  .note {
-    color: white;
-    margin-bottom: 0px;
-    margin-top: 10px;
-    text-align: center;
-    font-size: 0.65em;
-  }
-
-  /* Locations */
-  .location {
-    max-width: 260px;
-    padding: 12px;
-    padding-bottom: 5px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: -20px;
-  }
-
-  h2 {
-    margin-top: -10px;
-    font-size: 1.5em;
-  }
-
-  p {
-    /* margin-top: 0.3em; */
-    line-height: 1.5em;
-    flex: 4;
-    flex-basis: 30%;
-    /* width: 200px; */
-    font-size: 0.75em;
-    margin-top: -3px;
-  }
-
-  .gold {
-    font-size: 15px;
-    margin-top: -0px;
-    margin-bottom: -12px;
-    margin: 0px 40px;
-    padding: 8px 10px;
-  }
-
-  .until {
-    margin: 0px 30px;
-    margin-top: 2px;
-    margin-bottom: -3px;
-    font-size: 0.9em;
-    font-weight: bold;
-  }
-
-  /* div .been {
-    margin-bottom: -30px;
-  } */
-
-  /* Activities */
-  h4 {
-    color: white;
-    margin-top: 30px;
-    margin-bottom: -8px;
-    font-size: 1.5em;
-  }
-
-  /* Colors for activity */
-  .activity .red {
-    color: red;
-    font-size: 0.8em;
-  }
-
-  .activity .green {
-    color: green;
-    font-size: 0.8em;
-  }
-}
-
-/* Ninja Gold sound buttons */
-.sound-controls {
+/* Space below the player-selection buttons */
+.mode-selector {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
   width: 100%;
-  margin: 20px auto;
+  margin-bottom: 20px;
+}
+
+.mode-selector p {
+  width: 100%;
+  margin: 0;
+  color: gold;
+}
+
+.mode-selector .gold {
+  margin: 0;
+}
+
+/* Current turn and final result */
+.turn-display {
+  width: 100%;
+  margin: 10px 0;
+  color: gold;
   text-align: center;
 }
 
-.sound-buttons {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.sound-controls .sound-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-width: 160px;
-  min-height: 48px;
-  padding: 12px 20px;
-  border: 2px solid #ffd700;
-  border-radius: 12px;
-  background: #171717;
-  color: #ffd700;
-  font-family: inherit;
-  font-size: 17px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.sound-controls .sound-button[aria-pressed="true"] {
-  background: #ffd700;
-  color: #111;
-}
-
-.sound-controls .sound-button:hover {
-  background: #ffe766;
-  color: #111;
-}
-
-.sound-controls .sound-button:focus-visible {
-  outline: 3px solid white;
-  outline-offset: 4px;
-}
-
-.sound-controls #sound-status {
-  margin-top: 12px;
-  color: #ffd700;
-  font-size: 15px;
-}
-
-
-/* Responsive layout corrections */
-#container {
-  width: 100%;
-  max-width: 1350px;
-  min-height: 100vh;
-  padding: 24px 16px;
-}
-
-#container > *,
-.flex-div > * {
-  min-width: 0;
-  max-width: 100%;
-}
-
-.flex-div {
-  width: 100%;
-}
-
-#container .my-total {
-  min-width: 0;
-  margin: 0 0 20px;
-  padding: 0;
-  font-size: clamp(1.2rem, 3vw, 2rem);
-  line-height: 1.35;
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
-
-#gold-ninja {
-  width: clamp(65px, 12vw, 100px);
-  height: auto;
-  margin: 0 0 12px;
-}
-
-.flex-div > a {
-  display: inline-block;
+.turn-display p {
   margin: 0;
-  padding: 8px 12px;
-  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+.player-scores {
+  width: 100%;
+  margin: 10px 0 16px;
+  color: gold;
+  text-align: center;
+}
+
+.player-score {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 8px;
+  margin: 8px 0;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 /* Sound controls */
 .sound-controls {
   width: 100%;
-  max-width: 420px;
-  margin: 16px auto;
+  max-width: 340px;
+  margin: 12px auto;
+  text-align: center;
 }
 
-.sound-controls .sound-buttons {
+.sound-buttons {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
 }
 
-.sound-controls .sound-button {
-  flex: 1 1 145px;
-  min-width: 0;
-  max-width: 200px;
-  min-height: 48px;
-  padding: 12px;
-  font-size: clamp(0.9rem, 2vw, 1.05rem);
-}
-
-.sound-controls #sound-status {
-  margin: 10px 0 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-/* Latest activity message */
-.flex-div > div[aria-live="polite"] {
-  width: 100%;
-  padding: 0 8px;
-}
-
-.flex-div > div[aria-live="polite"] > p {
-  margin: 0;
-  font-size: clamp(1rem, 2.5vw, 1.5rem) !important;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-
-#container .note {
-  margin: 24px 0 20px;
-  font-size: clamp(0.9rem, 2vw, 1.3rem);
-  line-height: 1.5;
-  text-align: center;
-}
-
-/* Four columns on wide screens */
-#container .location-container {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-  width: 100%;
-}
-
-#container .location {
-  display: flex;
-  flex-direction: column;
+.sound-button {
+  display: inline-flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  width: 100%;
-  max-width: none;
+  justify-content: center;
+  gap: 6px;
+  flex: 1 1 140px;
   min-width: 0;
-  margin: 0;
-  padding: 20px 12px;
-}
-
-#container .location h2 {
-  margin: 0;
-  font-size: 1.5rem;
-  line-height: 1.2;
-}
-
-#container .location p {
-  flex: none;
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-
-#container .location form {
-  width: 100%;
-  margin: 0;
-}
-
-#container .location .gold {
-  max-width: 100%;
   min-height: 44px;
-  margin: 0;
-  padding: 10px 16px;
-  font-size: 1rem;
-  white-space: normal;
+  padding: 8px 12px;
+  border: 2px solid gold;
+  border-radius: 10px;
+  background-color: #171717;
+  color: gold;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.sound-button[aria-pressed="true"] {
+  background-color: gold;
+  color: black;
+}
+
+.sound-button:hover {
+  background-color: #ffe766;
+  color: black;
+}
+
+.sound-button:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 4px;
+}
+
+#sound-status {
+  margin-top: 12px;
+  color: gold;
+  font-size: 15px;
 }
 
 #container h4 {
-  margin: 28px 0 12px;
   color: white;
-  font-size: 1.4rem;
+  font-size: 20px;
+  text-align: center;
+  margin: 24px 0 12px;
 }
 
-#container .activity {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto 24px;
-  padding: 16px;
+.winner-message {
+  color: gold;
+  font-size: clamp(24px, 4vw, 40px);
+  font-weight: bold;
+  text-align: center;
+  padding: 20px;
+  border: 3px solid gold;
+  border-radius: 16px;
+  background: #1a1400;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
 }
 
-#container .activity p {
-  margin: 8px 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-
-#container .loose,
-#container .win,
-#container .neutral {
-  margin: 0 0 20px;
-  font-size: clamp(1rem, 2.5vw, 1.5rem);
-  line-height: 1.5;
-}
-
-/* Desktop: four columns */
-#container .location-container {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-}
-
-#container .location {
-  width: auto;
-  min-width: 0;
-  box-sizing: border-box;
-}
-
-/* Tablets: two columns */
+/* Tablets: two cards per row */
 @media (max-width: 1000px) {
-  #container .location-container {
+  .location-container {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* Phones: one column */
+/* Phones: one card per row */
 @media (max-width: 540px) {
-  #container {
-    padding: 20px 12px;
-  }
-
-  #container .location-container {
+  .location-container {
     grid-template-columns: minmax(0, 1fr);
-    gap: 14px;
   }
 
-  #container .location {
-    padding: 18px 14px;
+  .note {
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 16px auto;
+    padding: 0 8px;
+    margin-top: 7px;
+  }
+
+  .turn-display {
+   margin: 0px 0
+  ;
   }
 }

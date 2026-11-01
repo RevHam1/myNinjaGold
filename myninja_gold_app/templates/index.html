@@ -5,191 +5,277 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-   
-    <link rel="icon" type="image/jpeg" href="{% static 'images/ninja-icon.jpg' %}" />
-    <link rel="apple-touch-icon" href="{% static 'images/ninja-icon.jpg' %}" />
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=4" />
+
+    <link
+      rel="icon"
+      type="image/jpeg"
+      href="{% static 'images/ninja-icon.jpg' %}"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="{% static 'images/ninja-icon.jpg' %}"
+    />
 
     <title>Ninja Gold</title>
+
     {{ request.session.used_buildings|json_script:"used-buildings-data" }}
+
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   </head>
-  <body>
-  <!--
-    {% if sound_to_play %}
-    <audio autoplay>
-      <source
-        src="/{{ sound_to_play }}"
-        type="audio/{{ sound_to_play|slice:'-3:' }}"
-      />
-      Your browser does not support the audio element.
-    </audio>
-    {% endif %}
-    -->
 
+  <body>
     <div id="container">
-      <h3 class="my-total">
-        Play Ninja Gold.<br />Your Gold Total is {{ request.session.gold }} Ounces of Gold
-      </h3>
-      {% if request.session.all_lost_conditions_met %}
-      <p class="loose">
-        You've been at the "Casino" too long. You "LOST". Take a break or reset
-        your gold.
-      </p>
-      {% elif request.session.win_condition_met %}
-      <p class="win">
-        Congratulations! You've reached the maximum Casino visits and secured a
-        "BIG WIN!"
-      </p>
-      {% elif request.session.broke_even_condition_met %}
-      <p class="neutral">
-        You've played wisely and broke even. No gain, no loss! Perhaps try again
-        or call it a day.
-      </p>
+
+      <!-- Player mode selection -->
+      {% if not request.session.mode_selected %}
+        <form
+          action="{% url 'start_game' %}"
+          method="POST"
+          class="mode-selector"
+          style="color: gold; text-align: center;"
+        >
+          {% csrf_token %}
+
+          <p>Choose a mode. Starting a mode resets the game.</p>
+
+          <button
+            type="submit"
+            name="player_count"
+            value="1"
+            class="gold"
+          >
+            Start 1 Player
+          </button>
+
+          <button
+            type="submit"
+            name="player_count"
+            value="2"
+            class="gold"
+          >
+            Start 2 Players
+          </button>
+        </form>
       {% endif %}
 
-      <div class="flex-div">
-        <div style="text-align: center">
-          <img
-            id="gold-ninja"
-            src="{% static 'images/gold_ninja.jpg' %}"
-            alt="Gold Ninja"
-          />
-        </div>
+     <!-- Active player's gold -->
+<h3 class="my-total">
+  Play Ninja Gold.<br />
+ 
+ {% if request.session.game_over %}
+    Final Results
+  {% else %}
+    Player {{ request.session.active_player|add:"1" }}:
+    {{ request.session.gold }} Ounces of Gold
+  {% endif %}
+</h3>
 
-        <a href="/reset">Reset Gold</a> 
-
-
-        <div class="sound-controls">
-  <div class="sound-buttons">
-    <button type="button" id="start-sound" class="sound-button">
-      <span aria-hidden="true">▶</span> Start Sound
-    </button>
-
-    <button type="button" id="stop-sound" class="sound-button">
-      <span aria-hidden="true">■</span> Stop Sound
-    </button>
+<div class="flex-div">
+  <div style="text-align: center;">
+    <img
+      id="gold-ninja"
+      src="{% static 'images/gold_ninja.jpg' %}"
+      alt="Gold Ninja"
+    />
   </div>
 
-  <p id="sound-status" role="status"></p>
-</div>
+  <a href="/reset">Restart Game</a>
 
+  <!-- Sound controls -->
+  <div class="sound-controls">
+    <div class="sound-buttons">
+      <button
+        type="button"
+        id="start-sound"
+        class="sound-button"
+      >
+        <span aria-hidden="true">▶</span> Start Sound
+      </button>
 
-
-
-        
-               
-
-        {% if request.session.activities %}
-        <div aria-live="polite" style="text-align: center; margin: 15px 0;">
-          {% with latest=request.session.activities|last %}
-            <p style="color: gold; font-size: 24px; font-weight: bold;">
-              {{ latest }}
-            </p>
-          {% endwith %}
-        </div>
-        {% endif %}
-
-        
-        
-
-  
-        <p class="note">
-          Search each location once. Play the Casino up to 15 times while you have gold
-        </p>
-      </div>
-      <div class="location-container">
-        <!-- Farm -->
-<div class="location">
-  <h2>Farm</h2>
-  <p>Earns 50-100 ounces of gold</p>
-
-  {% if "farm" in request.session.used_buildings %}
-    <p style="font-weight: bold;">You've Searched on a Farm.</p>
-  {% else %}
-    <form action="/process_money" method="POST">
-      {% csrf_token %}
-      <input type="hidden" name="building" value="farm" />
-      <input class="gold" type="submit" value="Find Gold!" />
-    </form>
-  {% endif %}
-</div>
-
-<!-- Cave -->
-<div class="location">
-  <h2>Cave</h2>
-  <p>Earns 75-150 ounces of gold</p>
-
-  {% if "cave" in request.session.used_buildings %}
-    <p style="font-weight: bold;">You've Discovered Gold in a Cave.</p>
-  {% else %}
-    <form action="/process_money" method="POST">
-      {% csrf_token %}
-      <input type="hidden" name="building" value="cave" />
-      <input class="gold" type="submit" value="Find Gold!" />
-    </form>
-  {% endif %}
-</div>
-
-<!-- House -->
-<div class="location">
-  <h2>House</h2>
-  <p>Earns 20-50 ounces of gold</p>
-
-  {% if "house" in request.session.used_buildings %}
-    <p style="font-weight: bold;">You've Stolen from a House.</p>
-  {% else %}
-    <form action="/process_money" method="POST">
-      {% csrf_token %}
-      <input type="hidden" name="building" value="house" />
-      <input class="gold" type="submit" value="Find Gold!" />
-    </form>
-  {% endif %}
-</div>
-
-        <!-- Casino -->
-        <div class="location">
-          
-          <h2>Casino</h2>
-
-<p>
-  Casino visits: {{ request.session.casino_visits|default:0 }} / 15
-</p>
-
-{% if request.session.gold < 1 %}
-
-
-          <p style="color: red; font-size: medium; text-align: center">
-            No Gold! No Play! First Find Gold
-          </p>
-          <form action="/process_money" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="building" value="casino" />
-            <input class="gold" type="submit" value="Need Gold To Play" />
-          </form>
-          {% else %}
-          <p>Earn/lose 0-50 Gold ounces</p>
-          <form action="/process_money" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="building" value="casino" />
-            <input class="gold" type="submit" value="Play until you Win or Lose" />
-          </form>
-          {% endif %}
-        </div>
-        
-      </div>
-      <h4>Activities</h4>
-
-      <div class="activity">
-        {%for activity in request.session.activities%}
-        <!-- Space -->
-        {%if "Yay" in activity%}
-        <p class="green">{{activity}}</p>
-        {% else %}
-        <p class="red">{{activity}}</p>
-        {% endif %} {% endfor %}
-      </div>
+      <button
+        type="button"
+        id="stop-sound"
+        class="sound-button"
+      >
+        <span aria-hidden="true">■</span> Stop Sound
+      </button>
     </div>
+
+    <p id="sound-status" role="status"></p>
+  </div>
+
+  <!-- Most recent action -->
+  {% if request.session.activities %}
+    <div
+      aria-live="polite"
+      style="text-align: center; margin: 10px 0;"
+    >
+      {% with latest=request.session.activities|last %}
+        <p style="color: gold; font-weight: bold;">
+          {{ latest }}
+        </p>
+      {% endwith %}
+    </div>
+  {% endif %}
+
+  <!-- Final result or current turn -->
+  <div id="player-turn" class="turn-display" aria-live="polite">
+    {% if request.session.game_over %}
+      <p class="winner-message">
+        🏆 {{ request.session.game_result }}
+      </p>
+    {% else %}
+      <p>
+        Player {{ request.session.active_player|add:"1" }}'s turn
+      </p>
+    {% endif %}
+  </div>
+
+  <!-- Player scores below the turn -->
+  <div class="player-scores">
+    {% for player in request.session.players %}
+      <p class="player-score">
+        <span>
+          <strong>{{ player.name }}</strong>:
+          {{ player.gold }} ounces of gold
+        </span>
+
+        <span class="score-divider" aria-hidden="true">—</span>
+
+        <span>
+          Casino visits: {{ player.casino_visits }} / 15
+        </span>
+      </p>
+    {% endfor %}
+  </div>
+
+  <p class="note">
+    Each player can search the Farm, Cave, and House once
+    and visit the Casino up to 15 times while they have gold.
+
+    {% if request.session.players|length == 2 %}
+      Player 1 completes their game first, followed by Player 2.
+      The player with the most gold when both players finish wins!
+    {% endif %}
+  </p>
+</div>
+
+      <!-- Hide locations after the game ends -->
+      {% if not request.session.game_over %}
+        <div class="location-container">
+
+          <!-- Farm -->
+          <div class="location">
+            <h2>Farm</h2>
+            <p>Earns 50-100 ounces of gold</p>
+
+            {% if "farm" in request.session.used_buildings %}
+              <p style="font-weight: bold;">
+                You've searched on a Farm.
+              </p>
+            {% else %}
+              <form action="/process_money#player-turn" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="building" value="farm" />
+                <input class="gold" type="submit" value="Find Gold!" />
+              </form>
+            {% endif %}
+          </div>
+
+          <!-- Cave -->
+          <div class="location">
+            <h2>Cave</h2>
+            <p>Earns 75-150 ounces of gold</p>
+
+            {% if "cave" in request.session.used_buildings %}
+              <p style="font-weight: bold;">
+                You've discovered gold in a Cave.
+              </p>
+            {% else %}
+              <form action="/process_money#player-turn" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="building" value="cave" />
+                <input class="gold" type="submit" value="Find Gold!" />
+              </form>
+            {% endif %}
+          </div>
+
+          <!-- House -->
+          <div class="location">
+            <h2>House</h2>
+            <p>Earns 20-50 ounces of gold</p>
+
+            {% if "house" in request.session.used_buildings %}
+              <p style="font-weight: bold;">
+                You've stolen from a House.
+              </p>
+            {% else %}
+              <form action="/process_money#player-turn" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="building" value="house" />
+                <input class="gold" type="submit" value="Find Gold!" />
+              </form>
+            {% endif %}
+          </div>
+
+          <!-- Casino -->
+          <div class="location">
+            <h2>Casino</h2>
+
+          <p>
+            Casino visits:
+            {{ request.session.casino_visits|default:0 }} / 15
+          </p>
+
+          {% if request.session.casino_visits >= 15 %}
+            <p style="font-weight: bold;">
+              Casino visit limit reached.
+            </p>
+
+          {% elif request.session.gold < 1 %}
+            <p style="color: red;">
+              No Gold! Find Gold.
+            </p>
+
+            <input
+              class="gold"
+              type="button"
+              value="Need Gold To Play"
+              disabled
+            />
+
+          {% else %}
+            <p>Win/lose up to 50 ounces of gold</p>
+
+            <form action="/process_money#player-turn" method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="building" value="casino" />
+              <input
+                class="gold"
+                type="submit"
+                value="Play Casino!"
+              />
+            </form>
+          {% endif %}
+          </div>
+
+        </div>
+      {% endif %}
+
+      <!-- Activity history -->
+      <h4>Activities</h4>
+  <div class="activity">
+    {% for activity in request.session.activities %}
+      {% if "Yay" in activity %}
+        <p class="green">{{ activity }}</p>
+      {% else %}
+        <p class="red">{{ activity }}</p>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
     
     <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -211,6 +297,10 @@
       "{{ request.session.all_lost_conditions_met|yesno:'True,False' }}" ===
       "True";
 
+   const isTwoPlayerGameOver =
+      "{{ request.session.game_over|yesno:'True,False' }}" === "True" &&
+      "{{ request.session.players|length }}" === "2";
+
     // Create the sound assigned by the Django view.
     const sessionAudio = soundToPlay
       ? new Audio(
@@ -230,7 +320,9 @@
     // Win/loss sounds take priority over the session sound.
     let currentSounds = [];
 
-    if (isGameLost) {
+    if (isTwoPlayerGameOver) {
+      currentSounds = [winSound];
+    } else if (isGameLost) {
       currentSounds = [loseSound];
     } else if (isGameWon) {
       currentSounds = [winSound, ninjaSound];
@@ -359,6 +451,30 @@
     }
   });
 </script>
+
+{% if request.session.game_over %}
+<script>
+  window.addEventListener("load", function () {
+    if (typeof confetti !== "function") return;
+
+    function launchConfetti() {
+      confetti({
+        particleCount: 150,
+        spread: 100,
+        origin: { x: 0.5, y: 0.6 },
+        colors: ["#FFD700", "#00E676", "#FFFFFF"],
+        disableForReducedMotion: true
+      });
+    }
+
+    launchConfetti();
+    setTimeout(launchConfetti, 700);
+    setTimeout(launchConfetti, 1400);
+    setTimeout(launchConfetti, 1000);
+  });
+  
+</script>
+{% endif %}
 
 
   </body>
