@@ -152,12 +152,10 @@
   </div>
 
   <p class="note">
-    Each player can search the Farm, Cave, and House once
-    and visit the Casino up to 15 times while they have gold.
+    Search each location once. Play Casino up to 15 times while you have gold.
 
     {% if request.session.players|length == 2 %}
-      Player 1 completes their game first, followed by Player 2.
-      The player with the most gold when both players finish wins!
+      Player 1 finishes, then Player 2 pla!ys. Most gold wins
     {% endif %}
   </p>
 </div>
@@ -191,7 +189,7 @@
 
             {% if "cave" in request.session.used_buildings %}
               <p style="font-weight: bold;">
-                You've discovered gold in a Cave.
+                You already explored the Cave.
               </p>
             {% else %}
               <form action="/process_money#player-turn" method="POST">
@@ -277,7 +275,7 @@
   </div>
 </div>
     
-    <script>
+  <script>
   document.addEventListener("DOMContentLoaded", function () {
     const winSound = new Audio("{% static 'sounds/applause4.mp3' %}");
     const loseSound = new Audio("{% static 'sounds/boo.wav' %}");
@@ -320,12 +318,15 @@
     // Win/loss sounds take priority over the session sound.
     let currentSounds = [];
 
-    if (isTwoPlayerGameOver) {
+    const hasTwoPlayerWinner =
+      isTwoPlayerGameOver &&
+      "{{ request.session.players.0.gold }}" !==
+      "{{ request.session.players.1.gold }}";
+
+    if (isGameWon || hasTwoPlayerWinner) {
       currentSounds = [winSound];
     } else if (isGameLost) {
       currentSounds = [loseSound];
-    } else if (isGameWon) {
-      currentSounds = [winSound, ninjaSound];
     } else if (sessionAudio) {
       currentSounds = [sessionAudio];
     }
@@ -423,25 +424,30 @@
       playSound(ninjaSound);
     });
 
-    // Keep the winning confetti independent of sound controls.
-    if (isGameWon && !isGameLost && typeof confetti === "function") {
-      let count = 0;
+    
+  // Confetti works independently of sound controls.
+  if (
+    (isGameWon || hasTwoPlayerWinner) &&
+    typeof confetti === "function"
+  ) {
+    let count = 0;
 
-      const repeatConfetti = setInterval(function () {
-        confetti({
-          particleCount: 200,
-          spread: 100,
-          origin: { y: 0.5 },
-          colors: ["#ffd700", "#ffb800", "#e6ac00"],
-        });
+    const repeatConfetti = setInterval(function () {
+      confetti({
+        particleCount: 200,
+        spread: 100,
+        origin: { y: 0.5 },
+        colors: ["#ffd700", "#ffb800", "#e6ac00"],
+        disableForReducedMotion: true
+      });
 
-        count++;
+      count++;
 
-        if (count >= 11) {
-          clearInterval(repeatConfetti);
-        }
-      }, 1000);
-    }
+      if (count >= 2) {
+        clearInterval(repeatConfetti);
+      }
+    }, 1000);
+  }
 
     updateStatus();
 
@@ -452,29 +458,6 @@
   });
 </script>
 
-{% if request.session.game_over %}
-<script>
-  window.addEventListener("load", function () {
-    if (typeof confetti !== "function") return;
-
-    function launchConfetti() {
-      confetti({
-        particleCount: 150,
-        spread: 100,
-        origin: { x: 0.5, y: 0.6 },
-        colors: ["#FFD700", "#00E676", "#FFFFFF"],
-        disableForReducedMotion: true
-      });
-    }
-
-    launchConfetti();
-    setTimeout(launchConfetti, 700);
-    setTimeout(launchConfetti, 1400);
-    setTimeout(launchConfetti, 1000);
-  });
-  
-</script>
-{% endif %}
 
 
   </body>
