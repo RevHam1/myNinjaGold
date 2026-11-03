@@ -165,7 +165,8 @@
         <div class="location-container">
 
           <!-- Farm -->
-          <div class="location">
+           <!-- Farm -->
+          <div class="location" id="farm">
             <h2>Farm</h2>
             <p>Earns 50-100 ounces of gold</p>
 
@@ -192,7 +193,7 @@
                 You already explored the Cave.
               </p>
             {% else %}
-              <form action="/process_money#player-turn" method="POST">
+              <form action="/process_money#farm" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="building" value="cave" />
                 <input class="gold" type="submit" value="Find Gold!" />
@@ -210,7 +211,7 @@
                 You've stolen from a House.
               </p>
             {% else %}
-              <form action="/process_money#player-turn" method="POST">
+              <form action="/process_money#farm" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="building" value="house" />
                 <input class="gold" type="submit" value="Find Gold!" />
@@ -247,7 +248,7 @@
           {% else %}
             <p>Win/lose up to 50 ounces of gold</p>
 
-            <form action="/process_money#player-turn" method="POST">
+            <form action="/process_money#farm" method="POST">
               {% csrf_token %}
               <input type="hidden" name="building" value="casino" />
               <input

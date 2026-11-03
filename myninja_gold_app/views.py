@@ -336,6 +336,97 @@ def ninja_gold_game(request):
     return index(request)
 
 
+# def process_money(request):
+#     if request.method != "POST":
+#         return redirect("/")
+
+#     initialize_game(request)
+
+#     building = request.POST.get("building")
+
+#     if building not in (*LOCATIONS, "casino"):
+#         return redirect("/")
+
+#     players = request.session["players"]
+#     active = request.session["active_player"]
+#     player = players[active]
+#     activities = request.session["activities"]
+
+#     if player_finished(player):
+#         return redirect("/")
+
+#     if building in LOCATIONS:
+#         if building in player["used_buildings"]:
+#             return redirect("/")
+
+#         gold = random.randint(*LOCATIONS[building])
+#         player["gold"] += gold
+#         player["used_buildings"].append(building)
+
+#         actions = {
+#             "farm": "found {gold} ounces of Gold on a Farm! Yay!",
+#             "cave": "found {gold} ounces of Gold in a Cave! Yay!",
+#             "house": "stole {gold} ounces of Gold from a House! Yay!",
+#         }
+
+#         message = actions[building].format(gold=gold)
+#         sound = f"static/sounds/{building}.wav"
+
+#     else:
+#         if player["gold"] <= 0:
+#             activities.append(
+#                 f"{player['name']}: No Gold! Search another area."
+#             )
+#             request.session["activities"] = activities
+#             return redirect("/")
+
+#         gold = random.choices(
+#             [
+#                 random.randint(-50, -1),
+#                 random.randint(1, 50),
+#                 0,
+#             ],
+#             weights=[80, 13, 7],
+#             k=1,
+#         )[0]
+
+#         # A player cannot lose more gold than they have.
+#         gold = max(gold, -player["gold"])
+
+#         player["gold"] += gold
+#         player["casino_visits"] += 1
+
+#         if gold > 0:
+#             message = (
+#                 f"won {gold} ounces of Gold at the Casino! Yay!"
+#             )
+#             sound = "static/sounds/ka-ching.mp3"
+#         elif gold < 0:
+#             message = (
+#                 f"lost {abs(gold)} ounces of Gold "
+#                 "at the Casino! Boooo!!"
+#             )
+#             sound = "static/sounds/loss.wav"
+#         else:
+#             message = "won nothing at the Casino. Oh well..."
+#             sound = "static/sounds/ohwell.wav"
+
+#     activities.append(f"{player['name']} {message}")
+
+#     # Keep the current player active until their game is finished.
+#     if player_finished(player):
+#         for next_player in range(active + 1, len(players)):
+#             if not player_finished(players[next_player]):
+#                 request.session["active_player"] = next_player
+#                 break
+
+#     request.session["players"] = players
+#     request.session["activities"] = activities
+#     request.session["sound_to_play"] = sound
+
+#     sync_current_player(request)
+#     return redirect("/")
+
 def process_money(request):
     if request.method != "POST":
         return redirect("/")
@@ -378,7 +469,7 @@ def process_money(request):
                 f"{player['name']}: No Gold! Search another area."
             )
             request.session["activities"] = activities
-            return redirect("/")
+            return redirect("/#farm")
 
         gold = random.choices(
             [
@@ -401,12 +492,14 @@ def process_money(request):
                 f"won {gold} ounces of Gold at the Casino! Yay!"
             )
             sound = "static/sounds/ka-ching.mp3"
+
         elif gold < 0:
             message = (
                 f"lost {abs(gold)} ounces of Gold "
                 "at the Casino! Boooo!!"
             )
             sound = "static/sounds/loss.wav"
+
         else:
             message = "won nothing at the Casino. Oh well..."
             sound = "static/sounds/ohwell.wav"
@@ -425,4 +518,18 @@ def process_money(request):
     request.session["sound_to_play"] = sound
 
     sync_current_player(request)
-    return redirect("/")
+
+    # Scroll to the next player's turn after switching players.
+    if request.session["active_player"] != active:
+        return redirect("/#player-turn")
+
+    # Scroll to the results when the game ends.
+    if request.session.get("game_over"):
+        return redirect("/#player-turn")
+
+    # Other casino plays scroll to Farm.
+    if building == "casino":
+        return redirect("/#farm")
+
+    # Farm, Cave, and House actions scroll to the turn display.
+    return redirect("/#player-turn")
